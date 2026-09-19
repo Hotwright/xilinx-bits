@@ -1,0 +1,10 @@
+# device to fabric mapping
+# xc7z007s has no fabric of its own: the single-core Z-7007S PL die is
+# identical to the Z-7010's, tile for tile, so it reads xc7z010's tilegrid.
+# Only the IDCODE differs, and that lives in the part.yaml.
+xc7z007s:
+  fabric: xc7z010
+xc7z010:
+  fabric: xc7z010
+xc7z020:
+  fabric: xc7z020

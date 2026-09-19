@@ -1,0 +1,39 @@
+# Separately-versioned checkouts. prjxray carries our own branch; prjxray-db is
+# the READ-ONLY reference we validate against. Both are cloned, not vendored,
+# and xray-db-local's symlinks point into prjxray-db as a sibling - so it has to
+# be checked out here, just not tracked from here.
+/RapidWright/
+/prjxray/
+/prjxray-db/
+
+# Scratch.
+/vivado_test/
+
+# Build trees and fuzzer output. Regenerable, and large: one fuzzer's build/
+# alone is 649 MB.
+build/
+build-*/
+/rw-fuzzers/work/
+/bitstreams/build_*/
+
+# Downloaded SDKs and dependency build trees for the WASI build (~1.5 GB).
+# build_nextpnr_xilinx_wasm.sh fetches and builds all of these.
+/wasm-build/boost-*/
+/wasm-build/eigen-*/
+/wasm-build/wasi-sdk-*/
+/wasm-build/nextpnr-build/
+/wasm-build/nextpnr-bba-build/
+
+# Generated artifacts.
+*.log
+*.o
+*.orig
+*.bit
+*.fasm
+*.frames
+
+# The borrowed xc7s50 tileconn, kept next to the measured one so push_074.sh
+# can report how far the two differ. Byte-identical to
+# prjxray-db/spartan7/xc7s50/tileconn.json, so tracking it stores 11.6 MB of
+# that checkout a second time; the scripts treat it as optional.
+/xray-db-local/spartan7/xc7s25/tileconn.s50.json

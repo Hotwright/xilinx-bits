@@ -1,0 +1,7 @@
+# device to fabric mapping
+"xc7s50":
+  fabric: "xc7s50"
+
+# Not in upstream prjxray-db. Characterised locally; see rw-fuzzers/docs/XC7S25.md.
+"xc7s25":
+  fabric: "xc7s25"
