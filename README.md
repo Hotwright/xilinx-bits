@@ -1,4 +1,4 @@
-# 0-xilinx-bits
+# xilinx-bits
 
 Series-7 bitstream work built on top of [Project X-Ray][prjxray] and
 [RapidWright][rapidwright]: characterising a part prjxray-db does not ship,
@@ -21,7 +21,7 @@ Nothing here vendors prjxray or RapidWright. Both, and the reference
 
 ```
 some-parent/
-├── 0-xilinx-bits/     <- this repository
+├── xilinx-bits/       <- this repository (the local checkout is 0-xilinx-bits/)
 ├── prjxray/           <- our own branch
 ├── prjxray-db/        <- read-only reference
 └── RapidWright/
@@ -81,9 +81,10 @@ device model holds the same information offline. See
 [`docs/PORTING.md`](rw-fuzzers/docs/PORTING.md).
 
 Ten Series-7 configurations are defined (one of which, `kintex7_160t`, cannot
-run — the fuzzer README says why), selected by prjxray settings-file name. `env/xray_env.sh` restates no part definition: it lifts the `XRAY_*`
-exports straight out of `prjxray/settings/<config>.sh`, so parts and paths
-cannot drift from upstream's.
+run — the fuzzer README says why), selected by prjxray settings-file name.
+`env/xray_env.sh` restates no part definition: it lifts the `XRAY_*` exports
+straight out of `prjxray/settings/<config>.sh`, so parts and paths cannot drift
+from upstream's.
 
 ```bash
 source env/xray_env.sh spartan7_s25
