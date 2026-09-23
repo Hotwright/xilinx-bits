@@ -23,6 +23,7 @@ build-*/
 /wasm-build/wasi-sdk-*/
 /wasm-build/nextpnr-build/
 /wasm-build/nextpnr-bba-build/
+/wasm-build/prjxray-build/
 
 # Generated artifacts.
 *.log
