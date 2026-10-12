@@ -166,7 +166,7 @@ do_nextpnr() {
         -DHIMBAECHEL_SPLIT=ON \
         -DHIMBAECHEL_UARCH="xilinx" \
         -DHIMBAECHEL_PRJXRAY_DB=/mnt/i/Hotwright/0-xilinx-bits/xray-db-local \
-        -DHIMBAECHEL_XILINX_DEVICES="${DEVICES:-xc7s25;xc7s50;xc7z010}"
+        -DHIMBAECHEL_XILINX_DEVICES="${DEVICES:-xc7s25;xc7s50;xc7z010;xc7a50t}"
     # cmake's bba rule lists only xilinx_gen.py and constids.inc as INPUTS, so a
     # changed prjxray database does not invalidate the chipdb. Delete it when
     # the database has moved (e.g. after re-running 074).

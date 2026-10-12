@@ -1,0 +1,15 @@
+# Basys 3 (xc7a35tcpg236-1). Pins from Digilent's Basys-3-Master.xdc: 100 MHz
+# clock on W5, BTNC on U18 (active high), LD0-LD3 on U16/E19/U19/V19.
+set_property LOC W5 [get_ports clk]
+set_property IOSTANDARD LVCMOS33 [get_ports clk]
+create_clock -period 10.000 [get_ports clk]
+set_property LOC U18 [get_ports rst]
+set_property IOSTANDARD LVCMOS33 [get_ports rst]
+set_property LOC U16 [get_ports led[0]]
+set_property IOSTANDARD LVCMOS33 [get_ports led[0]]
+set_property LOC E19 [get_ports led[1]]
+set_property IOSTANDARD LVCMOS33 [get_ports led[1]]
+set_property LOC U19 [get_ports led[2]]
+set_property IOSTANDARD LVCMOS33 [get_ports led[2]]
+set_property LOC V19 [get_ports led[3]]
+set_property IOSTANDARD LVCMOS33 [get_ports led[3]]
