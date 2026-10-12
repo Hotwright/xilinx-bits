@@ -1,25 +1,28 @@
 #!/bin/bash
-# The whole post-074 chain for xc7s25, in order, in one place.
+# The whole post-074 chain for one die, in order, in one place. The die comes
+# from the settings file named by <config>.
 #
-# Run this once fuzzer 074-dump_all has produced output/tileconn.json. Until
-# now xray-db-local/spartan7/xc7s25/tileconn.json has been the xc7s50 file,
-# borrowed because env/check_tileconn_cover.py showed it covers every tile
-# adjacency on this die except the three MONITOR_*_FUJI2 XADC tiles. This
-# replaces it with the one measured on the xc7s25 die itself.
+# Run this once fuzzer 074-dump_all has produced output/tileconn.json for the
+# die. Until then a die's tileconn.json may be borrowed from a related die (on
+# xc7s25 it was xc7s50's, which env/check_tileconn_cover.py showed covers every
+# tile adjacency except the three MONITOR_*_FUJI2 XADC tiles). This replaces
+# it with the one measured on the die itself.
 #
 # Every step here has a trap that has already caught us once, so none of them
 # are optional and none can be reordered:
 #
 #   1. push       - NOT 074's own "make pushdb": that one cp's through the
 #                   overlay symlinks into the read-only prjxray-db.
-#   2. cover      - re-run the coverage probe. The MONITOR_*_FUJI2 misses are
-#                   the reason 074 was run at all, so if they are still there
-#                   the run did not achieve what it was for.
-#   3. chipdb     - FORCE_CHIPDB=xc7s25, because cmake's bba rule lists only
+#   2. cover      - re-run the coverage probe. Every tile type on the die must
+#                   have a tile_type_<T>.json; on xc7s25 the FUJI2 misses were
+#                   the reason 074 was run at all.
+#   3. chipdb     - FORCE_CHIPDB=<die>, because cmake's bba rule lists only
 #                   xilinx_gen.py and constids.inc as INPUTS and therefore does
 #                   not rebuild when the database changes.
-#   4. bitstream  - rebuild the Arty S7-25 .bit end to end and check the frame
-#                   count and IDCODE are what the earlier runs produced.
+#   4. bitstream  - rebuild a board .bit end to end and check the frame count
+#                   and IDCODE. Only the Arty S7-25 flow exists and the
+#                   expected numbers below are xc7s25's. Dies other than
+#                   xc7s25 and xc7s50 skip this step.
 #   5. wasm       - same chipdb into the WASI build, then the package's own
 #                   checks.
 #
