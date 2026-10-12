@@ -23,16 +23,22 @@
 #   5. wasm       - same chipdb into the WASI build, then the package's own
 #                   checks.
 #
-# usage: env/finish_074_s25.sh [step ...]      (default: all of the above)
+# usage: env/finish_074.sh <config> [step ...]   (default: all of the above)
+#   e.g. env/finish_074.sh spartan7_s25 chipdb bitstream
 set -e
 
 RWF_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 ROOT="$( dirname "$RWF_DIR" )"
+CONFIG="${1:?usage: env/finish_074.sh <config> [step ...]}"; shift
 STEPS="${*:-push cover chipdb bitstream wasm}"
+# Everything below is derived from the config rather than baked in, so a new
+# die needs a settings file and nothing else.
+source "${RWF_DIR}/env/xray_env.sh" "$CONFIG" > /dev/null
+DIE="${XRAY_FABRIC}"; PART="${XRAY_PART}"; FAM="${XRAY_DATABASE}"
 PY3="${XRAY_PYTHON:-${ROOT}/prjxray/env/bin/python3}"
 
-OUT="${ROOT}/prjxray/fuzzers/074-dump_all/build_xc7s25csga324-1/output"
-DB="${ROOT}/xray-db-local/spartan7/xc7s25"
+OUT="${XRAY_FUZZERS_DIR}/074-dump_all/build_${PART}/output"
+DB="${XRAY_DATABASE_DIR}/${FAM}/${DIE}"
 
 # What the native flow produced from the borrowed xc7s50 tileconn. The point of
 # re-checking is that swapping in the real one must not change the bitstream's
@@ -52,7 +58,7 @@ if step push; then
     # Bracket the patterns: an unbracketed "pgrep -f generate_after_dump.sh"
     # matches this script's own command line and reports the fuzzer alive
     # forever.
-    for proc in '[g]enerate_after_dump.sh' '[r]esume_074_s25.sh'; do
+    for proc in '[g]enerate_after_dump.sh' '[r]esume_074.sh'; do
         if pgrep -f "$proc" > /dev/null; then
             echo "   074 is still running (${proc//[\[\]]/}) - wait for it" >&2; exit 1
         fi
@@ -60,7 +66,7 @@ if step push; then
     # check_nodes.py is the step that validates what was built, and it runs
     # after tileconn.json is written. The run may have been resumed, so accept
     # evidence from either log.
-    if ! grep -lq 'check_nodes' "${RWF_DIR}"/work/074_*_s25.log 2>/dev/null; then
+    if ! grep -lq 'check_nodes' "${RWF_DIR}"/work/074_*_${DIE}.log "${RWF_DIR}"/work/074_*_s25.log 2>/dev/null; then
         echo "   no 074 log shows check_nodes.py ran - refusing to push" >&2; exit 1
     fi
     # Keep the borrowed file so the two can be compared; this is the only
@@ -68,7 +74,7 @@ if step push; then
     if [ -f "${DB}/tileconn.json" ] && [ ! -f "${DB}/tileconn.s50.json" ]; then
         cp "${DB}/tileconn.json" "${DB}/tileconn.s50.json"
     fi
-    "${RWF_DIR}/env/push_074.sh" spartan7_s25
+    "${RWF_DIR}/env/push_074.sh" "$CONFIG"
     if [ -f "${DB}/tileconn.s50.json" ]; then
         echo "   borrowed s50 tileconn: $(stat -c%s "${DB}/tileconn.s50.json") bytes"
         echo "   measured s25 tileconn: $(stat -c%s "${DB}/tileconn.json") bytes"
@@ -99,11 +105,19 @@ fi
 if step chipdb; then
     echo "== chipdb (native)"
     # Only xc7s25's database changed; xc7s50 and xc7z010 are untouched.
-    FORCE_CHIPDB=xc7s25 "${RWF_DIR}/env/build_nextpnr_s25.sh"
+    FORCE_CHIPDB="$DIE" DEVICES="$DIE" "${RWF_DIR}/env/build_nextpnr_s25.sh"
 fi
 
 if step bitstream; then
     echo "== bitstream"
+    # The only board flow wired up so far. Other dies get their chipdb and
+    # WASM package from the steps around this one; a bitstream needs a design
+    # and constraints for a real board, which is per-board work, not per-die.
+    if [ "$DIE" != xc7s25 ] && [ "$DIE" != xc7s50 ]; then
+        echo "   no board flow for ${DIE} - skipping"; STEPS="${STEPS/bitstream/}"
+    fi
+fi
+if step bitstream; then
     LOG="${RWF_DIR}/work/finish_bitstream.log"
     "${ROOT}/bitstreams/build_arty_s7.sh" 25 2>&1 | tee "$LOG"
     [ "${PIPESTATUS[0]}" = 0 ] || { echo "   build_arty_s7.sh failed" >&2; exit 1; }
@@ -131,8 +145,8 @@ fi
 
 if step wasm; then
     echo "== wasm"
-    FORCE_CHIPDB=xc7s25 "${ROOT}/wasm-build/build_nextpnr_xilinx_wasm.sh" nextpnr
+    FORCE_CHIPDB="$DIE" "${ROOT}/wasm-build/build_nextpnr_xilinx_wasm.sh" nextpnr
     make -C /mnt/i/Hotwright/hotc/web/nextpnr-xilinx-wasm package check
 fi
 
-echo "== finish_074_s25: done"
+echo "== finish_074 (${CONFIG}): done"
