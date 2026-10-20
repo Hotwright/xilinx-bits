@@ -46,9 +46,15 @@ fi
 
 if [[ " $WANT " == *" 005 "* ]] && ! stage_done 005; then
     echo "== 005-tilegrid"
-    ( cd "${XRAY_FUZZERS_DIR}/005-tilegrid" && make database )
+    # cfg cannot run on Vivado newer than 2017.2 (BSCAN JTAG_CHAIN DRC); see
+    # rw-fuzzers/docs/XC7S25.md. Without this every die stops at cfg.
+    ( cd "${XRAY_FUZZERS_DIR}/005-tilegrid" && SKIP_CFG=1 make database )
     mark_done 005
 fi
+
+# Vivado instances run in parallel in 072/074; same limits as run_072_074.sh.
+export MAX_VIVADO_PROCESS="${MAX_VIVADO_PROCESS:-4}"
+export MAX_GRID_CPU="${MAX_GRID_CPU:-6}"
 
 if [[ " $WANT " == *" 072 "* ]] && ! stage_done 072; then
     echo "== 072-ordered_wires"

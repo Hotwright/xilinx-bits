@@ -68,8 +68,16 @@ if step push; then
     done
     # check_nodes.py is the step that validates what was built, and it runs
     # after tileconn.json is written. The run may have been resumed, so accept
-    # evidence from either log.
-    if ! grep -lq 'check_nodes' "${RWF_DIR}"/work/074_*_${DIE}.log "${RWF_DIR}"/work/074_*_s25.log 2>/dev/null; then
+    # evidence from any of THIS die's logs. xc7s25's predate the naming rule
+    # and end in _s25; globbing those for every die let any die's push pass on
+    # xc7s25's evidence, so they count only for xc7s25 itself.
+    # nullglob: an unmatched pattern must vanish, not stay a literal - grep
+    # exits 2 on a missing file even when another file matches.
+    shopt -s nullglob
+    _logs=( "${RWF_DIR}"/work/074_*_${DIE}.log )
+    [ "$DIE" = xc7s25 ] && _logs+=( "${RWF_DIR}"/work/074_*_s25.log )
+    shopt -u nullglob
+    if [ ${#_logs[@]} -eq 0 ] || ! grep -lq 'check_nodes' "${_logs[@]}"; then
         echo "   no 074 log shows check_nodes.py ran - refusing to push" >&2; exit 1
     fi
     # Keep the borrowed file so the two can be compared; this is the only
