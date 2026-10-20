@@ -24,11 +24,21 @@ artix7:xc7a100tfgg676-1
 artix7:xc7a200tffg1156-1
 kintex7:xc7k70tfbg676-2
 kintex7:xc7k160tffg676-2
+kintex7:xc7k325tffg676-1
+kintex7:xc7k355tffg901-1
+kintex7:xc7k410tffg676-1
+kintex7:xc7k420tffg901-1
 spartan7:xc7s50fgga484-1
 spartan7:xc7s25csga324-1
+spartan7:xc7s6cpga196-1
+spartan7:xc7s75fgga484-1
 zynq7:xc7z010clg400-1
 zynq7:xc7z007sclg400-1
 zynq7:xc7z020clg484-1
+zynq7:xc7z012sclg485-1
+zynq7:xc7z030fbg676-1
+zynq7:xc7z035fbg676-1
+zynq7:xc7z100ffg900-1
 "
 
 cd "$WORK"

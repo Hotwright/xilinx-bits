@@ -5,3 +5,11 @@
 # Not in upstream prjxray-db. Characterised locally; see rw-fuzzers/docs/XC7S25.md.
 "xc7s25":
   fabric: "xc7s25"
+"xc7s6":
+  fabric: "xc7s6"
+"xc7s75":
+  fabric: "xc7s75"
+"xc7s15":
+  fabric: "xc7s6"
+"xc7s100":
+  fabric: "xc7s75"

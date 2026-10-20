@@ -38,3 +38,11 @@ xc7s25csga324-1:
   device: xc7s25
   package: csga324
   speedgrade: '1'
+xc7s6cpga196-1:
+  device: xc7s6
+  package: cpga196
+  speedgrade: '1'
+xc7s75fgga484-1:
+  device: xc7s75
+  package: fgga484
+  speedgrade: '1'

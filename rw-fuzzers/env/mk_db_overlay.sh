@@ -26,9 +26,12 @@ REF="${ROOT}/prjxray-db"
 OVL="${ROOT}/xray-db-local"
 
 # family:part directories that must be real (writable) rather than symlinked.
-REAL_DIRS="spartan7/xc7s25 spartan7/xc7s25csga324-1 zynq7/xc7z007sclg400-1"
+# The 2026-10-19 device campaign adds: the kintex7 dies being characterised
+# (k160t/k325t/k355t/k410t/k420t and their first package each), the zynq7
+# dies (z012s/z030/z035/z100), and the spartan7 dies (s6/s75).
+REAL_DIRS="spartan7/xc7s25 spartan7/xc7s25csga324-1 zynq7/xc7z007sclg400-1 kintex7/xc7k160t kintex7/xc7k160tffg676-2 kintex7/xc7k325t kintex7/xc7k325tffg676-1 kintex7/xc7k355t kintex7/xc7k355tffg901-1 kintex7/xc7k410t kintex7/xc7k410tffg676-1 kintex7/xc7k420t kintex7/xc7k420tffg901-1 zynq7/xc7z012s zynq7/xc7z012sclg485-1 zynq7/xc7z030 zynq7/xc7z030fbg676-1 zynq7/xc7z035 zynq7/xc7z035fbg676-1 zynq7/xc7z100 zynq7/xc7z100ffg900-1 spartan7/xc7s6 spartan7/xc7s6cpga196-1 spartan7/xc7s75 spartan7/xc7s75fgga484-1"
 # families whose directory is rebuilt entry-by-entry rather than symlinked whole.
-OVERLAY_FAMILIES="spartan7 zynq7"
+OVERLAY_FAMILIES="artix7 kintex7 spartan7 zynq7"
 
 [ -d "$REF" ] || { echo "mk_db_overlay.sh: no reference db at $REF" >&2; exit 1; }
 
@@ -58,7 +61,27 @@ for fam in $OVERLAY_FAMILIES; do
     for entry in "$REF/$fam"/*; do
         name="$(basename "$entry")"
         [ "$name" = "mapping" ] && continue
-        ln -sfn "../../prjxray-db/$fam/$name" "$OVL/$fam/$name"
+        # Family-level files (tile_type_*.json, site_type_*.json) are INPUTS
+        # to chipdb generation, but the 074 fuzzer also REGENERATES them as
+        # part of characterising a new die. They must therefore be real copies,
+        # not symlinks: a link would resolve through into the read-only
+        # reference. Everything else stays a symlink (read-only inputs).
+        case "$name" in
+            tile_type_*.json|site_type_*.json)
+                if [ -L "$OVL/$fam/$name" ]; then
+                    tgt="$(readlink -f "$OVL/$fam/$name")"
+                    rm -f "$OVL/$fam/$name"
+                    cp "$tgt" "$OVL/$fam/$name"
+                    chmod u+w "$OVL/$fam/$name"
+                elif [ ! -e "$OVL/$fam/$name" ]; then
+                    cp -r "$entry" "$OVL/$fam/$name"
+                    chmod -R u+w "$OVL/$fam/$name"
+                fi
+                ;;
+            *)
+                [ -e "$OVL/$fam/$name" ] || ln -sfn "../../prjxray-db/$fam/$name" "$OVL/$fam/$name"
+                ;;
+        esac
     done
     # mapping/ is copied, not linked: create_environment.py resolves the part
     # through mapping/parts.yaml and mapping/devices.yaml, so a new part has to

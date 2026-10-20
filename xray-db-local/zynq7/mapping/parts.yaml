@@ -50,3 +50,19 @@ xc7z020clg484-3:
   device: xc7z020
   package: clg484
   speedgrade: '3'
+xc7z012sclg485-1:
+  device: xc7z012s
+  package: clg485
+  speedgrade: '1'
+xc7z030fbg676-1:
+  device: xc7z030
+  package: fbg676
+  speedgrade: '1'
+xc7z035fbg676-1:
+  device: xc7z035
+  package: fbg676
+  speedgrade: '1'
+xc7z100ffg900-1:
+  device: xc7z100
+  package: ffg900
+  speedgrade: '1'
