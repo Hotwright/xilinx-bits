@@ -350,3 +350,83 @@ xc7a50tftg256-3:
   device: xc7a50t
   package: ftg256
   speedgrade: '3'
+xc7a15tcpg236-1:
+  device: xc7a15t
+  package: cpg236
+  speedgrade: '1'
+xc7a15tcpg236-2:
+  device: xc7a15t
+  package: cpg236
+  speedgrade: '2'
+xc7a15tcpg236-2L:
+  device: xc7a15t
+  package: cpg236
+  speedgrade: '2L'
+xc7a15tcpg236-3:
+  device: xc7a15t
+  package: cpg236
+  speedgrade: '3'
+xc7a15tcsg324-1:
+  device: xc7a15t
+  package: csg324
+  speedgrade: '1'
+xc7a15tcsg324-2:
+  device: xc7a15t
+  package: csg324
+  speedgrade: '2'
+xc7a15tcsg324-2L:
+  device: xc7a15t
+  package: csg324
+  speedgrade: '2L'
+xc7a15tcsg324-3:
+  device: xc7a15t
+  package: csg324
+  speedgrade: '3'
+xc7a15tcsg325-1:
+  device: xc7a15t
+  package: csg325
+  speedgrade: '1'
+xc7a15tcsg325-2:
+  device: xc7a15t
+  package: csg325
+  speedgrade: '2'
+xc7a15tcsg325-2L:
+  device: xc7a15t
+  package: csg325
+  speedgrade: '2L'
+xc7a15tcsg325-3:
+  device: xc7a15t
+  package: csg325
+  speedgrade: '3'
+xc7a15tfgg484-1:
+  device: xc7a15t
+  package: fgg484
+  speedgrade: '1'
+xc7a15tfgg484-2:
+  device: xc7a15t
+  package: fgg484
+  speedgrade: '2'
+xc7a15tfgg484-2L:
+  device: xc7a15t
+  package: fgg484
+  speedgrade: '2L'
+xc7a15tfgg484-3:
+  device: xc7a15t
+  package: fgg484
+  speedgrade: '3'
+xc7a15tftg256-1:
+  device: xc7a15t
+  package: ftg256
+  speedgrade: '1'
+xc7a15tftg256-2:
+  device: xc7a15t
+  package: ftg256
+  speedgrade: '2'
+xc7a15tftg256-2L:
+  device: xc7a15t
+  package: ftg256
+  speedgrade: '2L'
+xc7a15tftg256-3:
+  device: xc7a15t
+  package: ftg256
+  speedgrade: '3'
